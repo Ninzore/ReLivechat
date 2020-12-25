@@ -1,0 +1,28 @@
+{
+  "name": "relivechat",
+  "version": "0.1.0",
+  "description": "live comments download and statictic",
+  "main": "livechat.js",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "fs-extra": "^9.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ninzore/ReLivechat.git"
+  },
+  "keywords": [
+    "youtube",
+    "live-comments"
+  ],
+  "author": "Ninzore",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Ninzore/ReLivechat/issues"
+  },
+  "homepage": "https://github.com/Ninzore/ReLivechat#readme"
+}
