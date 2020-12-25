@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatlog statistic visulization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <script>
+        let url = new URL('https://example.com?foo=1&bar=2');
+        let params = new URLSearchParams(url.search.slice(1));
+
+        axios.get("http://127.0.0.1:3000", {
+            params : {
+                stats : new URLSearchParams(window.location.href).get("stat")
+            }
+        }).then(res => {
+            let stats = res.data;
+            
+            for (let data of stats.counters) {
+                let canvas_elem = document.createElement("canvas");
+                canvas_elem.width = 1000;
+                canvas_elem.height = 300;
+                document.body.appendChild(canvas_elem);
+
+                let canvas = canvas_elem.getContext('2d');
+                let chart = new Chart(canvas, {
+                    type: 'bar',
+                    data: {
+                        labels: stats.time,
+                        datasets: [
+                            {
+                                label: `num of ${data.word}`,
+                                data: data.counter,
+                                borderWidth: 1,
+                                type: "line",
+                                borderColor: "rgba(54, 162, 235, 1)"
+                            },
+                            {
+                                label: `num of ${data.word}`,
+                                data: data.counter,
+                                borderWidth: 1,
+                                type: "bar",
+                                hoverBackgroundColor: "#1B813E"
+                            },
+                            {
+                                label: "q3",
+                                data: new Array(stats.time.length).fill(data.q3),
+                                borderWidth: 1,
+                                type: "line",
+                                borderColor: "rgba(203, 27, 69, 1)",
+                                pointRadius: 0
+                            },
+                            {
+                                label: "mean",
+                                data: new Array(stats.time.length).fill(data.mean),
+                                borderWidth: 1,
+                                type: "line",
+                                borderColor: "#FC9F4D",
+                                pointRadius: 0
+                            }]
+                        },
+                    options: {
+                        title: {
+                            display: true,
+                            text: `${data.word == "__all" ? "总" : data.word}量`
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+        })
+    </script>
+</body>
+</html>
