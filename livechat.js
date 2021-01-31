@@ -38,22 +38,36 @@ async function getInfo(id) {
 
 async function getContinuation(continuation) {
     try {
-        let res = await axios.get("https://www.youtube.com/live_chat_replay/get_live_chat_replay", {
-            headers : {
-                "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36,gzip(gfe)",
-            },
+        let res = await axios({
+            url: "https://www.youtube.com/youtubei/v1/live_chat/get_live_chat_replay",
+            method : "POST",
             params : {
-                "continuation" : continuation,
-                "pbj" : 1,
-                "hidden" : false,
-                "playerOffsetMs" : 0
+                "key" : "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+            },
+            data : {
+                "context": {
+                    "client": {
+                        "hl": "en-US", // must have
+                        "deviceMake": "",
+                        "deviceModel": "",
+                        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36,gzip(gfe)", // must have
+                        "clientName": "WEB", // must have
+                        "clientVersion": "2.20210128.02.00", // must have
+                        "osName": "Windows",
+                        "osVersion": "10.0",  
+                        "platform": "DESKTOP",
+                        "browserName": "Chrome",
+                        "browserVersion": "88.0.4324.104"
+                    }
+                },
+                "continuation": continuation
             }
         }).catch(err => {
             console.error(err);
             throw new Error("Connection Error");
         });
-        if ("continuationContents" in res.data.response) {
-            return res.data.response.continuationContents.liveChatContinuation;
+        if ("continuationContents" in res.data) {
+            return res.data.continuationContents.liveChatContinuation;
         }
         else throw new Error("No continuation");
     }
@@ -165,8 +179,11 @@ async function loop(continuation, id) {
         else console.error(err);
     }
     finally {
-        console.log(`Saving to ${id}.json`);
-        fs.writeJSONSync(`./data/${id}.json`, chatlogs);
+        if (chatlogs.length > 0) {
+            console.log(`Saving to ${id}.json`);
+            fs.writeJSON(path.join(RAWPATH, `${id}.json`), chatlogs);
+        }
+        else console.error(`${id} has nothing to write`);
     }
 }
 
