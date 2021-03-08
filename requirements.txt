@@ -1,0 +1,3 @@
+neologdn==0.4
+fugashi==1.1.0
+ujson==4.0.2
