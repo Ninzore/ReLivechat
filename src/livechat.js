@@ -1,3 +1,4 @@
+import path from "path";
 import fs from "fs-extra"
 import axios from "axios";
 
@@ -193,5 +194,5 @@ async function startSync(id) {
     else console.error("Initialization ERROR, exit");
 }
 
-// change the record id here
+// uncomment and change the record id here
 // startSync("Ec4Qs_GzA0k")
