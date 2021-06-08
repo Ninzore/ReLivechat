@@ -9,14 +9,7 @@
 </head>
 <body>
     <script>
-        let url = new URL('https://example.com?foo=1&bar=2');
-        let params = new URLSearchParams(url.search.slice(1));
-
-        axios.get("http://127.0.0.1:3000", {
-            params : {
-                stats : new URLSearchParams(window.location.href).get("stat")
-            }
-        }).then(res => {
+        axios.get("http://127.0.0.1:3000").then(res => {
             let stats = res.data;
             
             for (let data of stats.counters) {
