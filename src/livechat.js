@@ -2,6 +2,12 @@ import path from "path";
 import fs from "fs-extra"
 import axios from "axios";
 
+const RAWPATH = "data";
+if (!fs.existsSync(RAWPATH)) {
+    console.log(`create ${RAWPATH} dir`);
+    fs.mkdirSync(RAWPATH);
+}
+
 axios.defaults.__retry = 2;
 let retry_delay = 500;
 
@@ -195,4 +201,4 @@ async function startSync(id) {
 }
 
 // uncomment and change the record id here
-// startSync("Ec4Qs_GzA0k")
+// startSync("")
