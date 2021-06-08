@@ -1,8 +1,14 @@
 import fs from "fs-extra";
 import http from "http";
 
+const TARGETPATH = "stats";
+if (!fs.existsSync(TARGETPATH)) {
+    console.log(`create ${TARGETPATH} dir`);
+    fs.mkdirSync(TARGETPATH);
+}
+
 async function loadChatlog(id) {
-    return fs.readJSON(`./data/${id}.json`);
+    return fs.readJSON(`data/${id}.json`);
 }
 
 function toTimeText(mSec) {
@@ -66,11 +72,9 @@ function potential(counter, margin, granularity) {
     return clips;
 }
 
-async function start(id) {
+async function start(id, granularity = 100 * 1000, word_search = [""]) {
     let chatlog = await loadChatlog(id);
-    
-    const granularity = 300 * 1000;
-    const word_search = ["", "草", "w"];
+
     let next_offset = granularity;
     let counters = [];
     let time = [];
@@ -122,7 +126,7 @@ async function start(id) {
         counters
     }
 
-    fs.writeJSONSync(`./stats/${id}_stats.json`, stats);
+    fs.writeJSONSync(`${TARGETPATH}/${id}_stats.json`, stats);
     server(stats)
 }
 
@@ -132,18 +136,16 @@ function server(stats) {
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET',
-      };
+    };
     http.createServer((req, res) => {
         res.statusCode = 200;
         res.writeHead(200, headers);
 
-        let param = new URL(req.url).search("stat");
-        console.log(param)
         res.end(JSON.stringify(stats));
     }).listen(port, hostname, () => {
         console.log(`Server running at http://${hostname}:${port}/`);
     });
 }
 
-// change the rocord id here
-// start("Ec4Qs_GzA0k")
+// change the rocord id here, follow <id>, <granularity>, <word_search>
+start("")
